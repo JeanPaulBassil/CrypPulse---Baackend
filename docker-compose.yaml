@@ -1,7 +1,7 @@
 services:
   pgweb:
     image: sosedoff/pgweb
-    container_name: pgweb
+    container_name: postgres-webview
     restart: unless-stopped
     links:
       - postgres:postgres
