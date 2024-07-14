@@ -1,7 +1,7 @@
 services:
   pgweb:
     image: sosedoff/pgweb
-    container_name: postgres-webview
+    container_name: mwm-postgres-webview
     restart: unless-stopped
     links:
       - postgres:postgres
@@ -18,18 +18,17 @@ services:
       retries: 5
 
   postgres:
+    container_name: mwm-postgres
     image: postgres:15-alpine
     restart: unless-stopped
+    user: ${POSTGRES_USER}
     environment:
-      - PGUSER=${POSTGRES_USER}
-      - POSTGRES_HOST=${POSTGRES_HOST}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_PORT=${POSTGRES_PORT}
     networks:
       - mwmnetwork
     volumes:
-      - postgres-data:/var/lib/postgresql/data/
+      - mwm-postgres-data:/var/lib/postgresql/data/
     healthcheck:
       test:
         [
@@ -45,6 +44,7 @@ services:
       retries: 5
 
   nestjs:
+    container_name: mwm-nestjs
     build:
       context: .
       dockerfile: ./docker/${NODE_ENV}.Dockerfile
@@ -66,7 +66,7 @@ services:
       - ./prisma:/usr/src/app/prisma
 
 volumes:
-  postgres-data:
+  mwm-postgres-data:
 
 networks:
   mwmnetwork:
