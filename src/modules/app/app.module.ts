@@ -12,16 +12,7 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
 import { IConfig, IThrottleConfig, validateConfig } from "../config";
 import { PrismaModule, QueryInfo, loggingMiddleware } from "nestjs-prisma";
-import {
-  ClearCacheInterceptor,
-  HttpCacheInterceptor,
-} from "src/common/interceptors";
-import {
-  ClearCacheMiddleware,
-  LoggerMiddleware,
-  RealIpMiddleware,
-  SettingMaintenanceMiddleware,
-} from "src/common/middleware";
+import { LoggerMiddleware, RealIpMiddleware } from "src/common/middleware";
 
 @Module({
   imports: [
@@ -64,14 +55,6 @@ import {
     },
     {
       provide: APP_INTERCEPTOR,
-      useClass: HttpCacheInterceptor,
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ClearCacheInterceptor,
-    },
-    {
-      provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
     },
   ],
@@ -79,12 +62,7 @@ import {
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(
-        LoggerMiddleware,
-        RealIpMiddleware,
-        ClearCacheMiddleware,
-        SettingMaintenanceMiddleware,
-      )
+      .apply(LoggerMiddleware, RealIpMiddleware)
       .forRoutes({ path: "*", method: RequestMethod.ALL });
   }
 }

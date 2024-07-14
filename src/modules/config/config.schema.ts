@@ -43,7 +43,7 @@ export interface IConfig {
 const configSchema = Joi.object({
   database: {
     user: Joi.string().required(),
-    password: Joi.string().required(),
+    password: Joi.string().required().allow(""),
     db: Joi.string().required(),
     port: Joi.number().default(5432),
     host: Joi.string().default("localhost"),
