@@ -1,28 +1,11 @@
-import { ApiProperty } from "@nestjs/swagger";
 import { DuePayment } from "@prisma/client";
 
-export class PaymentEntity implements DuePayment {
-  @ApiProperty()
+export class DuePaymentEntity implements DuePayment {
   id: string;
-
-  @ApiProperty()
   title: string;
-
-  @ApiProperty()
   amount: number;
-
-  @ApiProperty()
-  paymentDate: Date;
-
-  @ApiProperty()
   dueDate: Date;
-
-  @ApiProperty()
-  userId: number;
-
-  @ApiProperty()
+  status: string;
   createdAt: Date;
-
-  @ApiProperty()
   updatedAt: Date;
 }
