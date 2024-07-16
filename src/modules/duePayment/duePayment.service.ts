@@ -83,11 +83,22 @@ export class DuePaymentService {
 
   async remove(id: string): Promise<DuePaymentEntity> {
     try {
+      const payment = await this.prisma.duePayment.findUnique({
+        where: { id },
+      });
+
+      if (!payment) {
+        throw new HttpException("Payment not found", 404);
+      }
+
       return await this.prisma.duePayment.delete({
         where: { id },
       });
     } catch (error) {
       console.log(error);
+      if (error.code === "P2025") {
+        throw new HttpException("Payment not found", 404);
+      }
       throw new HttpException("Error deleting payment", 500);
     }
   }
