@@ -4,12 +4,6 @@ import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsEnum, IsInt, IsOptional, Max, Min } from "class-validator";
 import { ToBoolean } from "../helpers/functions.utils";
-
-export enum Order {
-  ASC = "asc",
-  DESC = "desc",
-}
-
 export class PageMetaDto {
   readonly page: number;
 
@@ -60,6 +54,11 @@ export class PaginatedResponseDto<T> {
 export interface PageMetaDtoParameters {
   pageOptionsDto: PageOptionsDto;
   itemCount: number;
+}
+
+export enum Order {
+  ASC = "asc",
+  DESC = "desc",
 }
 
 export class PageOptionsDto {
