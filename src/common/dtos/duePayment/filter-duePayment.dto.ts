@@ -1,14 +1,17 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 import { IsOptional, IsString, IsNumber } from "class-validator";
 
 export class FilterPaymentsDto {
   @ApiPropertyOptional({ description: "Page number for pagination" })
   @IsNumber()
+  @Type(() => Number)
   @IsOptional()
   page?: number;
 
   @ApiPropertyOptional({ description: "Offset for pagination" })
   @IsNumber()
+  @Type(() => Number)
   @IsOptional()
   offset?: number;
 
