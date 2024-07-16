@@ -1,5 +1,6 @@
-import { DuePaymentEntity } from "src/common/entities/payment.entity";
 import { IsNotEmpty, IsNumber, IsString, IsDate } from "class-validator";
+import { Type } from "class-transformer";
+import { DuePaymentEntity } from "../../entities/payment.entity";
 import { OmitType } from "@nestjs/swagger";
 
 export class CreatePaymentDto extends OmitType(DuePaymentEntity, [
@@ -16,6 +17,7 @@ export class CreatePaymentDto extends OmitType(DuePaymentEntity, [
   amount: number;
 
   @IsDate()
+  @Type(() => Date)
   @IsNotEmpty()
   dueDate: Date;
 
