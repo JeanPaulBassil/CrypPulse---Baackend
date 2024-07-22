@@ -1,14 +1,16 @@
+version: "3"
+
 services:
   pgweb:
     image: sosedoff/pgweb
-    container_name: mwm-postgres-webview
+    container_name: cp-postgres-webview
     restart: unless-stopped
     links:
       - postgres:postgres
     depends_on:
       - postgres
     networks:
-      - mwmnetwork
+      - cpnetwork
     ports:
       - 8081:8081
     healthcheck:
@@ -18,7 +20,7 @@ services:
       retries: 5
 
   postgres:
-    container_name: mwm-postgres
+    container_name: cp-postgres
     image: postgres:15-alpine
     restart: unless-stopped
     user: ${POSTGRES_USER}
@@ -26,9 +28,9 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
     networks:
-      - mwmnetwork
+      - cpnetwork
     volumes:
-      - mwm-postgres-data:/var/lib/postgresql/data/
+      - cp-postgres-data:/var/lib/postgresql/data/
     healthcheck:
       test:
         [
@@ -44,7 +46,7 @@ services:
       retries: 5
 
   nestjs:
-    container_name: mwm-nestjs
+    container_name: cp-nestjs
     build:
       context: .
       dockerfile: ./docker/${NODE_ENV}.Dockerfile
@@ -52,7 +54,7 @@ services:
     env_file:
       - .env
     networks:
-      - mwmnetwork
+      - cpnetwork
     expose:
       - ${NESTJS_PORT}
     ports:
@@ -65,8 +67,26 @@ services:
       - ./src:/usr/src/app/src
       - ./prisma:/usr/src/app/prisma
 
+  btcpayserver:
+    image: btcpayserver/btcpayserver:1.13.5
+    container_name: cp-btcpayserver
+    restart: unless-stopped
+    environment:
+      - NBITCOIN_NETWORK=mainnet
+      - BTCPAY_HOST=https://cryptpulse.co
+      - LETSENCRYPT_EMAIL=jean.paul.bassil@outlook.com
+      - BTCPAYGEN_CRYPTO1=btc
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - btcpay_data:/data
+    networks:
+      - cpnetwork
+
 volumes:
-  mwm-postgres-data:
+  cp-postgres-data:
+  btcpay_data:
 
 networks:
-  mwmnetwork:
+  cpnetwork:

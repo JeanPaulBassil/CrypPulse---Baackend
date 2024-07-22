@@ -13,7 +13,8 @@ import { APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
 import { IConfig, IThrottleConfig, validateConfig } from "../config";
 import { PrismaModule, QueryInfo, loggingMiddleware } from "nestjs-prisma";
 import { LoggerMiddleware, RealIpMiddleware } from "src/common/middleware";
-import { DuePaymentModule } from "../duePayment/duePayment.module";
+import { BotModule } from "../bot/bot.module";
+import { WebhookModule } from "../webhook/webhook.module";
 
 @Module({
   imports: [
@@ -47,7 +48,8 @@ import { DuePaymentModule } from "../duePayment/duePayment.module";
         ],
       },
     }),
-    DuePaymentModule,
+    BotModule,
+    WebhookModule,
   ],
   controllers: [AppController],
   providers: [

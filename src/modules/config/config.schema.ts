@@ -23,20 +23,29 @@ export interface IDocsConfig {
   username: string;
   password: string;
 }
+
 export interface IThrottleConfig {
   ttl: number;
   limit: number;
 }
 
+export interface ITelegramConfig {
+  apiToken: string;
+}
+
+export interface IBtcpayConfig {
+  url: string;
+  apiKey: string;
+  storeId: string;
+}
+
 export interface IConfig {
   database: IDatabaseConfig;
-
   nest: INestConfig;
-
   docs: IDocsConfig;
-
   throttle: IThrottleConfig;
-
+  telegram: ITelegramConfig;
+  btcpay: IBtcpayConfig;
   environment: Environment;
 }
 
@@ -64,7 +73,19 @@ const configSchema = Joi.object({
     limit: Joi.number().default(10),
   },
 
-  environment: Joi.string().required(),
+  telegram: {
+    apiToken: Joi.string().required(),
+  },
+
+  btcpay: {
+    url: Joi.string().required(),
+    apiKey: Joi.string().required(),
+    storeId: Joi.string().required(),
+  },
+
+  environment: Joi.string()
+    .valid(...Object.values(Environment))
+    .required(),
 });
 
 function transformConfig(config: Record<string, any>) {
@@ -88,6 +109,14 @@ function transformConfig(config: Record<string, any>) {
     throttle: {
       ttl: config.THROTTLE_TTL,
       limit: config.THROTTLE_LIMIT,
+    },
+    telegram: {
+      apiToken: config.TELEGRAM_API_TOKEN,
+    },
+    btcpay: {
+      url: config.BTCPAY_URL,
+      apiKey: config.BTCPAY_API_KEY,
+      storeId: config.BTCPAY_STORE_ID,
     },
     environment: config.NODE_ENV,
   };
